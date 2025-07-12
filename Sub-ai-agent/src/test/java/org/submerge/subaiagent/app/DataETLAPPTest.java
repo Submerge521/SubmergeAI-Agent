@@ -1,0 +1,42 @@
+package org.submerge.subaiagent.app;
+
+import jakarta.annotation.Resource;
+import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.context.SpringBootTest;
+
+import java.util.UUID;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+/**
+ * ClassName: DataETLAPPTest
+ * Package: org.submerge.subaiagent.app
+ * Description:
+ *
+ * @Author Submerge--WangDong
+ * @Create 2025/7/12 10:03
+ * @Version 1.0
+ */
+@SpringBootTest
+class DataETLAPPTest {
+
+    @Resource
+    private DataETLAPP dataETLAPP;
+
+    @Test
+    void testChat() {
+
+        String chatId = UUID.randomUUID().toString();
+
+        // 第一轮对话
+        String message = "你好，我是数据开发小星";
+        String answer = dataETLAPP.doChat(message, chatId);
+        // 第二轮对话
+        message = "不超过30字的一句话解释etl";
+        answer = dataETLAPP.doChat(message, chatId);
+        // 第三轮对话
+        message = "我的名字叫什么？";
+        answer = dataETLAPP.doChat(message, chatId);
+
+    }
+}
