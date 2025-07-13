@@ -1,14 +1,15 @@
 spring:
   application:
     name: Sub-ai-agent
+  profiles:
+    active: local
 
-
-#spring:
+  #spring:
 #  application:
 #    name: spring-ai-alibaba-qwq-chat-client-example
   ai:
     dashscope:
-      api-key: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+      api-key: sk-79f3296fd84c4c1ab9e8cf4fc9001013
       chat:
         options:
           model: qwen-plus
