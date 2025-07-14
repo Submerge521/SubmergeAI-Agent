@@ -6,8 +6,7 @@ import org.springframework.ai.chat.client.advisor.MessageChatMemoryAdvisor;
 import org.springframework.ai.chat.model.ChatModel;
 import org.springframework.ai.chat.model.ChatResponse;
 import org.springframework.stereotype.Component;
-import org.submerge.subaiagent.advisor.MyLoggerAdvisor;
-import org.submerge.subaiagent.chatmemory.DatabaseChatMemory;
+import org.submerge.subaiagent.advisor.WebBlocklistAdvisor;
 import org.submerge.subaiagent.chatmemory.FileBasedChatmemory;
 
 import java.util.List;
@@ -45,6 +44,7 @@ public class DataETLAPP {
                 .defaultSystem(SYSTEM_PROMPT)
                 .defaultAdvisors(
                         new MessageChatMemoryAdvisor(fileBasedChatmemory)
+                        , new WebBlocklistAdvisor()
                         // SpringAI内置的日志拦截器
 //                        ,new SimpleLoggerAdvisor()
                         // 自定义日志拦截器，按需开启
