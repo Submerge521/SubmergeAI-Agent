@@ -1,6 +1,13 @@
 spring:
   application:
     name: Sub-ai-agent
+  cloud:
+    openfeign:
+      client:
+        config:
+          default:
+            connectTimeout: 5000
+            readTimeout: 60000
 #  profiles:
 #    active: local
 

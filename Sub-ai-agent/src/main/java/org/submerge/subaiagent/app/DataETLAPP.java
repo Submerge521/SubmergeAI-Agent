@@ -9,6 +9,7 @@ import org.springframework.ai.chat.model.ChatModel;
 import org.springframework.ai.chat.model.ChatResponse;
 import org.springframework.stereotype.Component;
 import org.submerge.subaiagent.advisor.MyLoggerAdvisor;
+import org.submerge.subaiagent.chatmemory.FileBasedChatmemory;
 
 import java.util.List;
 
@@ -37,15 +38,18 @@ public class DataETLAPP {
 
 
     public DataETLAPP(ChatModel dashscopeChatModel) {
-        ChatMemory chatMemory = new InMemoryChatMemory();
+
+        String filedir = System.getProperty("user.dir") + "/tmp/data/chatmemory";
+        FileBasedChatmemory fileBasedChatmemory = new FileBasedChatmemory(filedir);
+//        ChatMemory chatMemory = new InMemoryChatMemory();
         chatClient = ChatClient.builder(dashscopeChatModel)
                 .defaultSystem(SYSTEM_PROMPT)
                 .defaultAdvisors(
-                        new MessageChatMemoryAdvisor(chatMemory)
+                        new MessageChatMemoryAdvisor(fileBasedChatmemory)
                         // SpringAI内置的日志拦截器
 //                        ,new SimpleLoggerAdvisor()
                         // 自定义日志拦截器，按需开启
-                        ,new MyLoggerAdvisor()
+//                        ,new MyLoggerAdvisor()
                 )
                 .build();
     }
