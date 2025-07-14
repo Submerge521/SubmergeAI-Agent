@@ -3,12 +3,11 @@ package org.submerge.subaiagent.app;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.chat.client.advisor.MessageChatMemoryAdvisor;
-import org.springframework.ai.chat.memory.ChatMemory;
-import org.springframework.ai.chat.memory.InMemoryChatMemory;
 import org.springframework.ai.chat.model.ChatModel;
 import org.springframework.ai.chat.model.ChatResponse;
 import org.springframework.stereotype.Component;
 import org.submerge.subaiagent.advisor.MyLoggerAdvisor;
+import org.submerge.subaiagent.chatmemory.DatabaseChatMemory;
 import org.submerge.subaiagent.chatmemory.FileBasedChatmemory;
 
 import java.util.List;
@@ -49,12 +48,21 @@ public class DataETLAPP {
                         // SpringAI内置的日志拦截器
 //                        ,new SimpleLoggerAdvisor()
                         // 自定义日志拦截器，按需开启
-//                        ,new MyLoggerAdvisor()
+//                        , new MyLoggerAdvisor()
                 )
                 .build();
     }
+//    public DataETLAPP(ChatModel dashscopeChatModel, DatabaseChatMemory databaseChatMemory) {
+//        chatClient = ChatClient.builder(dashscopeChatModel)
+//                .defaultSystem(SYSTEM_PROMPT)
+//                .defaultAdvisors(
+//                        new MessageChatMemoryAdvisor(databaseChatMemory)
+//                )
+//                .build();
+//    }
 
-    public String doChat(String message,String chatId){
+
+    public String doChat(String message, String chatId) {
         ChatResponse chatResponse = chatClient
                 .prompt()
                 .user(message)
@@ -63,16 +71,17 @@ public class DataETLAPP {
                 .call()
                 .chatResponse();
         String content = chatResponse.getResult().getOutput().getText();
-        log.info("content:{}",content);
+        log.info("content:{}", content);
         return content;
     }
 
-    record DataETLReport (String name, List<String> suggestions){
+    record DataETLReport(String name, List<String> suggestions) {
 
     }
 
     /**
      * 生成报告
+     *
      * @param message
      * @param chatId
      * @return
@@ -86,10 +95,9 @@ public class DataETLAPP {
                         .param(CHAT_MEMORY_RETRIEVE_SIZE_KEY, 10))
                 .call()
                 .entity(DataETLReport.class);
-        log.info("dataETLReport:{}",dataETLReport);
+        log.info("dataETLReport:{}", dataETLReport);
         return dataETLReport;
     }
-
 
 
 }

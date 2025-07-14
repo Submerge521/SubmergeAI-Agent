@@ -4,7 +4,9 @@ import jakarta.annotation.Resource;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.submerge.subaiagent.entity.ChatMessage;
 
+import java.util.Date;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -45,6 +47,15 @@ class DataETLAPPTest {
     void testChatWithReport() {
         String chatId = UUID.randomUUID().toString();
 
+        // 第一轮对话
+        String message = "你好，我是数据开发小星，我想要让我的SQL水平一周达到面试和日常开发水平，但我不知道该怎么准备？准备到什么程度？";
+        DataETLAPP.DataETLReport report = dataETLAPP.doChatWithReport(message, chatId);
+        Assertions.assertNotNull(report);
+    }
+
+    @Test
+    void testChat2() {
+        String chatId = UUID.randomUUID().toString();
         // 第一轮对话
         String message = "你好，我是数据开发小星，我想要让我的SQL水平一周达到面试和日常开发水平，但我不知道该怎么准备？准备到什么程度？";
         DataETLAPP.DataETLReport report = dataETLAPP.doChatWithReport(message, chatId);
