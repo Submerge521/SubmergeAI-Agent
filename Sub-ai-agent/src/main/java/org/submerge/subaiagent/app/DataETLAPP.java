@@ -10,6 +10,8 @@ import org.springframework.ai.chat.model.ChatResponse;
 import org.springframework.stereotype.Component;
 import org.submerge.subaiagent.advisor.MyLoggerAdvisor;
 
+import java.util.List;
+
 import static org.springframework.ai.chat.client.advisor.AbstractChatMemoryAdvisor.CHAT_MEMORY_CONVERSATION_ID_KEY;
 import static org.springframework.ai.chat.client.advisor.AbstractChatMemoryAdvisor.CHAT_MEMORY_RETRIEVE_SIZE_KEY;
 
@@ -60,5 +62,30 @@ public class DataETLAPP {
         log.info("content:{}",content);
         return content;
     }
+
+    record DataETLReport (String name, List<String> suggestions){
+
+    }
+
+    /**
+     * 生成报告
+     * @param message
+     * @param chatId
+     * @return
+     */
+    public DataETLReport doChatWithReport(String message, String chatId) {
+        DataETLReport dataETLReport = chatClient
+                .prompt()
+                .system(SYSTEM_PROMPT + "每次对话后都要生成一份标题以{用户名}+{主题}的相关报告，内容为具体的建议列表")
+                .user(message)
+                .advisors(spec -> spec.param(CHAT_MEMORY_CONVERSATION_ID_KEY, chatId)
+                        .param(CHAT_MEMORY_RETRIEVE_SIZE_KEY, 10))
+                .call()
+                .entity(DataETLReport.class);
+        log.info("dataETLReport:{}",dataETLReport);
+        return dataETLReport;
+    }
+
+
 
 }

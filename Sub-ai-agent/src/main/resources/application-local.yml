@@ -1,8 +1,8 @@
 spring:
   application:
     name: Sub-ai-agent
-  profiles:
-    active: local
+#  profiles:
+#    active: local
 
   #spring:
 #  application:

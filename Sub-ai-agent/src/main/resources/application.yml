@@ -1,9 +1,10 @@
 spring:
   application:
     name: Sub-ai-agent
+  profiles:
+    active: local
 
-
-#spring:
+  #spring:
 #  application:
 #    name: spring-ai-alibaba-qwq-chat-client-example
   ai:
