@@ -1,13 +1,19 @@
 package org.submerge.subaiagent.app;
 
+import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.chat.client.advisor.MessageChatMemoryAdvisor;
+import org.springframework.ai.chat.client.advisor.QuestionAnswerAdvisor;
 import org.springframework.ai.chat.model.ChatModel;
 import org.springframework.ai.chat.model.ChatResponse;
+import org.springframework.ai.vectorstore.VectorStore;
 import org.springframework.stereotype.Component;
+import org.submerge.subaiagent.advisor.MyLoggerAdvisor;
 import org.submerge.subaiagent.advisor.WebBlocklistAdvisor;
 import org.submerge.subaiagent.chatmemory.FileBasedChatmemory;
+import org.submerge.subaiagent.rag.DataETLAppDocumentLoader;
+import org.submerge.subaiagent.rag.DataETLAppVectorStoreConfig;
 
 import java.util.List;
 
@@ -28,6 +34,10 @@ import static org.springframework.ai.chat.client.advisor.AbstractChatMemoryAdvis
 public class DataETLAPP {
 
     private final ChatClient chatClient;
+
+    @Resource
+    private VectorStore dataEtlAppVectorStore;
+
 
     private static final String SYSTEM_PROMPT = "拥有 10 年以上实战经验的资深数据 ETL 开发专家，" +
             "精通各类 ETL 工具与全流程技术，能解决性能优化、数据质量等难题；与用户对话时，" +
@@ -99,5 +109,25 @@ public class DataETLAPP {
         return dataETLReport;
     }
 
+    /**
+     * 基于Rag的问答对话
+     * @param message
+     * @param chatId
+     * @return
+     */
+    public String doChatWithRag(String message, String chatId){
+        ChatResponse chatResponse = chatClient.prompt()
+                .user(message)
+                .advisors(spec -> spec.param(CHAT_MEMORY_CONVERSATION_ID_KEY, chatId)
+                        .param(CHAT_MEMORY_RETRIEVE_SIZE_KEY, 10))
+                .advisors(new QuestionAnswerAdvisor(dataEtlAppVectorStore))
+                .advisors(new MyLoggerAdvisor())
+                .call()
+                .chatResponse();
+        String content = chatResponse.getResult().getOutput().getText();
+        log.info("content:{}", content);
+        return content;
+
+    }
 
 }
