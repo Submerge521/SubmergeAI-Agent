@@ -1,10 +1,12 @@
 package org.submerge.subaiagent.app;
 
+import com.alibaba.cloud.ai.dashscope.rag.DashScopeDocumentRetrievalAdvisor;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.chat.client.advisor.MessageChatMemoryAdvisor;
 import org.springframework.ai.chat.client.advisor.QuestionAnswerAdvisor;
+import org.springframework.ai.chat.client.advisor.api.Advisor;
 import org.springframework.ai.chat.model.ChatModel;
 import org.springframework.ai.chat.model.ChatResponse;
 import org.springframework.ai.vectorstore.VectorStore;
@@ -37,6 +39,9 @@ public class DataETLAPP {
 
     @Resource
     private VectorStore dataEtlAppVectorStore;
+
+    @Resource
+    private Advisor dataEtlAppRagCloudAdvisor;
 
 
     private static final String SYSTEM_PROMPT = "拥有 10 年以上实战经验的资深数据 ETL 开发专家，" +
@@ -122,6 +127,28 @@ public class DataETLAPP {
                         .param(CHAT_MEMORY_RETRIEVE_SIZE_KEY, 10))
                 .advisors(new QuestionAnswerAdvisor(dataEtlAppVectorStore))
                 .advisors(new MyLoggerAdvisor())
+                .call()
+                .chatResponse();
+        String content = chatResponse.getResult().getOutput().getText();
+        log.info("content:{}", content);
+        return content;
+
+    }
+
+    /**
+     * 基于Rag的增强检索服务
+     * @param message
+     * @param chatId
+     * @return
+     */
+    public String doChatWithCloudRag(String message, String chatId){
+        ChatResponse chatResponse = chatClient.prompt()
+                .user(message)
+                .advisors(spec -> spec.param(CHAT_MEMORY_CONVERSATION_ID_KEY, chatId)
+                        .param(CHAT_MEMORY_RETRIEVE_SIZE_KEY, 10))
+                .advisors(new MyLoggerAdvisor())
+                // 添加Rag增强检索服务-- 基于云知识库
+                .advisors(dataEtlAppRagCloudAdvisor)
                 .call()
                 .chatResponse();
         String content = chatResponse.getResult().getOutput().getText();

@@ -34,4 +34,12 @@ class DataETLAppDocumentLoaderTest {
         Assertions.assertNotNull(content);
     }
 
+    @Test
+    void doChatWithCloudRag() {
+        String chatId = UUID.randomUUID().toString();
+        String message = "我刚开始入门大数据，如何开始学习呢？";
+        String content = dataETLAPP.doChatWithCloudRag(message, chatId);
+        Assertions.assertNotNull(content);
+    }
+
 }
