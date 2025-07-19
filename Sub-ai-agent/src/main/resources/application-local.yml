@@ -20,12 +20,24 @@ spring:
       chat:
         options:
           model: qwen-plus
+    vectorstore:
+      pgvector:
+        index-type: HNSW
+        dimensions: 1536
+        distance-type: COSINE_DISTANCE
+        max-document-batch-size: 10000 # Optional: Maximum number of documents per batch
+#        initialize-schema: true # 自动创建表
   datasource:
-    url: jdbc:mysql://localhost:3306/ai_agent?useSSL=false&serverTimezone=UTC
-    username: root
-    password: root123
-    driver-class-name: com.mysql.cj.jdbc.Driver
-
+    mysql:
+      url: jdbc:mysql://localhost:3306/ai_agent?useSSL=false&serverTimezone=UTC
+      username: root
+      password: root123
+      driver-class-name: com.mysql.cj.jdbc.Driver
+    postgresql:
+      url: jdbc:postgresql://192.168.20.141/sub_ai_agent
+      username: submerge
+      password: WangDong0288
+      driver-class-name: org.postgresql.Driver
 mybatis-plus:
   configuration:
     mapUnderscoreToCamelCase: true

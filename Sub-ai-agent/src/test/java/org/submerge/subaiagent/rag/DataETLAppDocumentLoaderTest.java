@@ -8,8 +8,6 @@ import org.submerge.subaiagent.app.DataETLAPP;
 
 import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 /**
  * ClassName: DataETLAppDocumentLoaderTest
  * Package: org.submerge.subaiagent.rag

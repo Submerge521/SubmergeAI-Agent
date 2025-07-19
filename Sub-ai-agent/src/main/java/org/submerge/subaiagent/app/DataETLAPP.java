@@ -1,6 +1,5 @@
 package org.submerge.subaiagent.app;
 
-import com.alibaba.cloud.ai.dashscope.rag.DashScopeDocumentRetrievalAdvisor;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.ai.chat.client.ChatClient;
@@ -14,8 +13,6 @@ import org.springframework.stereotype.Component;
 import org.submerge.subaiagent.advisor.MyLoggerAdvisor;
 import org.submerge.subaiagent.advisor.WebBlocklistAdvisor;
 import org.submerge.subaiagent.chatmemory.FileBasedChatmemory;
-import org.submerge.subaiagent.rag.DataETLAppDocumentLoader;
-import org.submerge.subaiagent.rag.DataETLAppVectorStoreConfig;
 
 import java.util.List;
 
